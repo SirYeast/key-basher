@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Key Basher</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap">
+    <link rel="stylesheet" href="assets/style/index.css">
+    <script src="assets/script/index.js" type="module"></script>
+</head>
+
+<body>
+    <main>
+        <div id="game-info">
+            <h1 id="timer"></h1>
+            <p><span id="points">0</span> points</p>
+        </div>
+        <div class="container">
+            <div id="letters"></div>
+            <input id="word-input" type="text" placeholder="Type the word above">
+        </div>
+    </main>
+    <div id="overlay">
+        <h1>Key Basher</h1>
+        <p id="message">Can you type 90 randomized words in 99 seconds?</p>
+        <ul>
+            <li id="point-stat"></li>
+            <li id="percent-stat"></li>
+        </ul>
+        <button id="play-btn">Play</button>
+    </div>
+</body>
+
+</html>
