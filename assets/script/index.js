@@ -12,6 +12,8 @@ const pointStat = document.getElementById("point-stat");
 const percentStat = document.getElementById("percent-stat");
 const playButton = document.getElementById("play-btn");
 
+const music = new Audio("assets/audio/nightrun.mp3");
+
 const words = ['dinosaur', 'love', 'pineapple', 'calendar', 'robot', 'building', 'population',
     'weather', 'bottle', 'history', 'dream', 'character', 'money', 'absolute',
     'discipline', 'machine', 'accurate', 'connection', 'rainbow', 'bicycle',
@@ -65,13 +67,7 @@ function processInput() {
         points.innerText = pointCount;
 
         if (wordsCopy.length == 0) {
-            clearInterval(interval);
-            wordInput.disabled = true;
-
-            timer.innerText = "You Won!";
-            message.innerText = "Nice, you got all the words!";
-
-            setTimeout(resetGame, 3000);
+            endGame("Won");
             return;
         }
         updateWord();
@@ -80,7 +76,6 @@ function processInput() {
 
 function startGame() {
     wordsCopy = [...words];
-
     updateWord();
 
     timer.innerText = timeLeft;
@@ -89,22 +84,43 @@ function startGame() {
     wordInput.disabled = false;
     wordInput.focus();
 
+    music.play();
+
     interval = setInterval(function () {
-        timer.innerText = timeLeft;
+        timeLeft--;
 
         if (timeLeft == 0) {
-            clearInterval(interval);
-            wordInput.disabled = true;
-
-            timer.innerText = "Time's Up!";
-            message.innerText = "You ran out of time!";
-
-            setTimeout(resetGame, 3000);
+            endGame("Time");
             return;
         }
 
-        timeLeft--;
+        timer.innerText = timeLeft;
     }, 1000);
+}
+
+function endGame(reason) {
+    clearInterval(interval);
+    wordInput.disabled = true;
+
+    if (reason == "Time") {
+        timer.innerText = "Time's Up!";
+        message.innerText = "You ran out of time!";
+    } else {
+        timer.innerText = "You Won!";
+        message.innerText = "Nice, you got all the words!";
+    }
+
+    let audioFade = setInterval(function () {
+        if (music.volume != 0)
+            music.volume -= 0.1;
+
+        if (music.volume < 0.003) {
+            clearInterval(audioFade);
+            music.pause();
+
+            setTimeout(resetGame, 2000);
+        }
+    }, 200);
 }
 
 function resetGame() {
@@ -115,6 +131,9 @@ function resetGame() {
 
     playButton.innerText = "Start Again";
     overlay.style.display = "flex";
+
+    music.currentTime = 0;
+    music.volume = 1;
 
     timeLeft = 99;
     pointCount = 0;
