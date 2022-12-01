@@ -108,7 +108,7 @@ function startGame() {
 }
 
 function resetGame() {
-    const score = new Score(new Date(), pointCount, (pointCount / words.length) * 100);
+    const score = new Score(new Date().toDateString(), pointCount, (pointCount / words.length) * 100);
 
     pointStat.innerText = `Words: ${score.hits} / ${words.length}`;
     percentStat.innerText = `Percentage: ${score.percentage.toFixed(2)}%`;
