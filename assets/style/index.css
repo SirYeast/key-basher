@@ -5,12 +5,14 @@ body {
     align-items: center;
     justify-content: center;
     min-height: 100vh;
-    background-color: #2d80ac;
+    background-color: #5b2ed4;
     color: #fff;
+    text-align: center;
 }
 
 h1 {
-    text-shadow: 5px 5px #000;
+    font-weight: 700;
+    text-shadow: 5px 5px 10px #000;
 }
 
 #game-info {
@@ -18,17 +20,27 @@ h1 {
     top: 50px;
     left: 50%;
     translate: -50% 0;
-    text-align: center;
 }
 
-#timer {
+#game-info h1 {
     font-size: 62px;
-    font-weight: 700;
+}
+
+#game-info p {
+    width: 200px;
+    padding: 5px;
+    border-radius: 50px;
+    background: #ee0979;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #ff6a00, #ee0979);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #ff6a00, #ee0979); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    text-shadow: 2px 2px 5px #000;
+    font-size: 20px;
+    font-weight: 600;
 }
 
 #points {
-    font-size: 24px;
-    font-weight: 600;
+    font-size: 28px;
+    font-weight: 700;
 }
 
 .container {
@@ -52,7 +64,6 @@ h1 {
     border: 2px solid #ffce3b;
     border-radius: 10px;
     font-size: 28px;
-    text-align: center;
 }
 
 #overlay {
@@ -63,11 +74,10 @@ h1 {
     position: fixed;
     width: 100%;
     height: 100%;
-    background-color: #c04949;
+    background-color: #29145c;
 }
 
 #overlay h1 {
-    font-weight: 700;
     font-size: 48px;
 }
 
@@ -82,7 +92,6 @@ h1 {
     color: #e4e4e4;
     font-size: 32px;
     font-weight: 600;
-    text-align: center;
 }
 
 #play-btn {
@@ -92,7 +101,6 @@ h1 {
     background-color: #ffce3b;
     color: #000;
     font-size: 20px;
-    text-align: center;
     text-transform: uppercase;
     transition: background-color 0.2s;
 }

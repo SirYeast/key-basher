@@ -88,13 +88,12 @@ function startGame() {
 
     interval = setInterval(function () {
         timeLeft--;
+        timer.innerText = timeLeft;
 
         if (timeLeft == 0) {
             endGame("Time");
             return;
         }
-
-        timer.innerText = timeLeft;
     }, 1000);
 }
 
@@ -103,10 +102,10 @@ function endGame(reason) {
     wordInput.disabled = true;
 
     if (reason == "Time") {
-        timer.innerText = "Time's Up!";
+        letters.innerText = "Time's Up!";
         message.innerText = "You ran out of time!";
     } else {
-        timer.innerText = "You Won!";
+        letters.innerText = "You Won!";
         message.innerText = "Nice, you got all the words!";
     }
 
