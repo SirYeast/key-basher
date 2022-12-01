@@ -78,7 +78,11 @@ h1 {
 
 #overlay ul {
     margin-bottom: 30px;
-    color: #000000;
+    padding-block: 50px;
+    color: #e4e4e4;
+    font-size: 32px;
+    font-weight: 600;
+    text-align: center;
 }
 
 #play-btn {
