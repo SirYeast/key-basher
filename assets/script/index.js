@@ -33,7 +33,7 @@ const words = [
 
 let wordsCopy;
 let currentWord;
-let letterElements = [];
+let letterElements;
 let timeLeft;
 let timerID;
 let pointCount;
@@ -121,7 +121,10 @@ function endGame(reason) {
 
         if (music.volume < 0.003) {
             clearInterval(audioFadeID);
+
             music.pause();
+            music.currentTime = 0;
+            music.volume = 1;
 
             setTimeout(function() {
                 const score = new Score(new Date().toDateString(), pointCount, (pointCount / words.length) * 100);
@@ -130,9 +133,6 @@ function endGame(reason) {
                 overlayPercentStat.innerText = `Percentage: ${score.percentage.toFixed(2)}%`;
                 overlayPlayButton.innerText = "Start Again";
                 overlay.style.display = "flex";
-
-                music.currentTime = 0;
-                music.volume = 1;
             }, 2000);
         }
     }, 200);
