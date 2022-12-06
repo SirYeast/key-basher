@@ -4,17 +4,18 @@ import Score from "./Score.js";
 
 const timer = document.getElementById("timer");
 const points = document.getElementById("points");
-const letters = document.getElementById("letters");
+const display = document.getElementById("display");
 const wordInput = document.getElementById("word-input");
 const overlay = document.getElementById("overlay");
-const message = document.getElementById("message");
-const pointStat = document.getElementById("point-stat");
-const percentStat = document.getElementById("percent-stat");
-const playButton = document.getElementById("play-btn");
+const overlayMessage = document.getElementById("message");
+const overlayPointStat = document.getElementById("point-stat");
+const overlayPercentStat = document.getElementById("percent-stat");
+const overlayPlayButton = document.getElementById("play-btn");
 
 const music = new Audio("assets/audio/nightrun.mp3");
 
-const words = ['dinosaur', 'love', 'pineapple', 'calendar', 'robot', 'building', 'population',
+const words = [
+    'dinosaur', 'love', 'pineapple', 'calendar', 'robot', 'building', 'population',
     'weather', 'bottle', 'history', 'dream', 'character', 'money', 'absolute',
     'discipline', 'machine', 'accurate', 'connection', 'rainbow', 'bicycle',
     'eclipse', 'calculator', 'trouble', 'watermelon', 'developer', 'philosophy',
@@ -33,52 +34,57 @@ const words = ['dinosaur', 'love', 'pineapple', 'calendar', 'robot', 'building',
 let wordsCopy;
 let currentWord;
 let letterElements = [];
-let timeLeft = 99;
-let interval;
-let pointCount = 0;
+let timeLeft;
+let timerID;
+let pointCount;
 
 function updateWord() {
-    wordInput.value = "";
-    letters.innerHTML = "";
+    if (wordsCopy.length == 0) {
+        endGame("Won");
+        return;
+    }
 
-    letterElements = [];
+    wordInput.value = "";
+    display.innerHTML = "";
 
     let index = Math.floor(Math.random() * wordsCopy.length);
     currentWord = wordsCopy[index];
     wordsCopy.splice(index, 1);
 
+    letterElements = [];
+
     for (let i = 0; i < currentWord.length; i++) {
         let letter = document.createElement("span");
         letter.innerText = currentWord[i];
-
-        letters.appendChild(letter);
         letterElements.push(letter);
+        display.appendChild(letter);
     }
 }
 
 function processInput() {
-    let input = wordInput.value.trim().toLowerCase();
-
-    for (let i = 0; i < currentWord.length; i++)
-        letterElements[i].style.color = currentWord[i] === input[i] ? "#ffce3b" : "revert";
+    let input = wordInput.value.toLowerCase();
 
     if (currentWord === input) {
+        updateWord();
         pointCount++;
         points.innerText = pointCount;
+        return;
+    }
 
-        if (wordsCopy.length == 0) {
-            endGame("Won");
-            return;
-        }
-        updateWord();
+    for (let i = 0; i < currentWord.length; i++) {
+        letterElements[i].style.color = currentWord[i] === input[i] ? "#ffce3b" : "revert";
     }
 }
 
 function startGame() {
     wordsCopy = [...words];
-    updateWord();
+    timeLeft = 10;
+    pointCount = 0;
 
     timer.innerText = timeLeft;
+    points.innerText = 0;
+
+    updateWord();
 
     overlay.style.display = "none";
     wordInput.disabled = false;
@@ -86,58 +92,51 @@ function startGame() {
 
     music.play();
 
-    interval = setInterval(function () {
-        timeLeft--;
-        timer.innerText = timeLeft;
-
+    timerID = setInterval(function () {
         if (timeLeft == 0) {
             endGame("Time");
             return;
         }
+
+        timeLeft--;
+        timer.innerText = timeLeft;
     }, 1000);
 }
 
 function endGame(reason) {
-    clearInterval(interval);
+    clearInterval(timerID);
     wordInput.disabled = true;
 
     if (reason == "Time") {
-        letters.innerText = "Time's Up!";
-        message.innerText = "You ran out of time!";
+        display.innerText = "Time's Up!";
+        overlayMessage.innerText = "You ran out of time!";
     } else {
-        letters.innerText = "You Won!";
-        message.innerText = "Nice, you got all the words!";
+        display.innerText = "You Won!";
+        overlayMessage.innerText = "Nice, you got all the words!";
     }
 
-    let audioFade = setInterval(function () {
+    let audioFadeID = setInterval(function () {
         if (music.volume != 0)
             music.volume -= 0.1;
 
         if (music.volume < 0.003) {
-            clearInterval(audioFade);
+            clearInterval(audioFadeID);
             music.pause();
 
-            setTimeout(resetGame, 2000);
+            setTimeout(function() {
+                const score = new Score(new Date().toDateString(), pointCount, (pointCount / words.length) * 100);
+
+                overlayPointStat.innerText = `Words: ${score.hits} / ${words.length}`;
+                overlayPercentStat.innerText = `Percentage: ${score.percentage.toFixed(2)}%`;
+                overlayPlayButton.innerText = "Start Again";
+                overlay.style.display = "flex";
+
+                music.currentTime = 0;
+                music.volume = 1;
+            }, 2000);
         }
     }, 200);
 }
 
-function resetGame() {
-    const score = new Score(new Date().toDateString(), pointCount, (pointCount / words.length) * 100);
-
-    pointStat.innerText = `Words: ${score.hits} / ${words.length}`;
-    percentStat.innerText = `Percentage: ${score.percentage.toFixed(2)}%`;
-
-    playButton.innerText = "Start Again";
-    overlay.style.display = "flex";
-
-    music.currentTime = 0;
-    music.volume = 1;
-
-    timeLeft = 99;
-    pointCount = 0;
-    points.innerText = 0;
-}
-
 wordInput.addEventListener("keyup", processInput);
-playButton.addEventListener("click", startGame);
+overlayPlayButton.addEventListener("click", startGame);

@@ -61,7 +61,7 @@ h1 {
     flex-direction: column;
 }
 
-#letters {
+#display {
     margin-bottom: 20px;
     font-size: 48px;
     font-weight: 600;
