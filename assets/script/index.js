@@ -78,7 +78,7 @@ function processInput() {
 
 function startGame() {
     wordsCopy = [...words];
-    timeLeft = 10;
+    timeLeft = 99;
     pointCount = 0;
 
     timer.innerText = timeLeft;
