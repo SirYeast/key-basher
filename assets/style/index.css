@@ -100,7 +100,7 @@ h1 {
     font-size: 24px;
 }
 
-#overlay ul {
+#stats {
     margin-bottom: 30px;
     padding-block: 50px;
     color: #e4e4e4;
@@ -121,4 +121,32 @@ h1 {
 
 #play-btn:hover {
     background-color: #df9138;
+}
+
+#scores {
+    display: none;
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 300px;
+    height: 100%;
+    padding: 50px;
+    box-shadow: 0 10px 10px rgb(0 0 0 / 0.5);
+    background-color: #231351;
+    color: #ffce3b;
+}
+
+#scores h2 {
+    margin-bottom: 20px;
+    font-size: 28px;
+    font-weight: 700
+}
+
+#score-list li {
+    display: flex;
+    justify-content: space-between;
+}
+
+#score-list li+li {
+    margin-top: 10px;
 }

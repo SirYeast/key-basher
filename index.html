@@ -10,7 +10,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap">
     <link rel="stylesheet" href="assets/style/index.css">
-    <script src="assets/script/index.js" type="module"></script>
+    <script src="assets/script/index.js" defer></script>
 </head>
 
 <body>
@@ -27,11 +27,16 @@
     <div id="overlay">
         <h1>Key Basher</h1>
         <p id="message">Type 90 randomized words in 99 seconds. Are you up for the challenge?</p>
-        <ul>
+        <ul id="stats">
             <li id="point-stat"></li>
             <li id="percent-stat"></li>
         </ul>
         <button id="play-btn">Play</button>
+
+        <aside id="scores">
+            <h2>High Scores</h2>
+            <ul id="score-list"></ul>
+        </aside>
     </div>
 </body>
 

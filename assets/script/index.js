@@ -1,7 +1,5 @@
 "use strict";
 
-import Score from "./Score.js";
-
 const timer = document.getElementById("timer");
 const points = document.getElementById("points");
 const display = document.getElementById("display");
@@ -11,6 +9,8 @@ const overlayMessage = document.getElementById("message");
 const overlayPointStat = document.getElementById("point-stat");
 const overlayPercentStat = document.getElementById("percent-stat");
 const overlayPlayButton = document.getElementById("play-btn");
+const scoreAside = document.getElementById("scores");
+const scoreList = document.getElementById("score-list");
 
 const music = new Audio("assets/audio/nightrun.mp3");
 
@@ -31,12 +31,44 @@ const words = [
     'keyboard', 'window'
 ];
 
+let scores = [];
+
 let wordsCopy;
 let currentWord;
 let letterElements;
 let timeLeft;
 let timerID;
 let pointCount;
+
+function populateScores() {
+    if (scores.length > 1)
+        scores.sort((a, b) => b.wordsEntered - a.wordsEntered);
+
+    scoreList.innerHTML = "";
+
+    for (let i = 0; i < scores.length; i++) {
+        const score  = scores[i];
+
+        const scoreItem = document.createElement("li");
+
+        const scorePlace = document.createElement("span");
+        scorePlace.className = "place";
+        scorePlace.innerText = `#${i + 1}`;
+        scoreItem.appendChild(scorePlace);
+
+        const scoreWordsEntered = document.createElement("span");
+        scoreWordsEntered.className = "words-entered";
+        scoreWordsEntered.innerText = `${score.wordsEntered} words`;
+        scoreItem.appendChild(scoreWordsEntered);
+
+        const scorePercentage = document.createElement("span");
+        scorePercentage.className = "percentage";
+        scorePercentage.innerText = `${score.percentage.toFixed(2)}%`;
+        scoreItem.appendChild(scorePercentage);
+
+        scoreList.appendChild(scoreItem);
+    }
+}
 
 function updateWord() {
     if (wordsCopy.length == 0) {
@@ -78,7 +110,7 @@ function processInput() {
 
 function startGame() {
     wordsCopy = [...words];
-    timeLeft = 99;
+    timeLeft = 10;
     pointCount = 0;
 
     timer.innerText = timeLeft;
@@ -127,16 +159,41 @@ function endGame(reason) {
             music.volume = 1;
 
             setTimeout(function() {
-                const score = new Score(new Date().toDateString(), pointCount, (pointCount / words.length) * 100);
+                const score = {
+                    wordsEntered: pointCount,
+                    percentage: pointCount / words.length * 100
+                };
 
-                overlayPointStat.innerText = `Words: ${score.hits} / ${words.length}`;
+                overlayPointStat.innerText = `Words: ${score.wordsEntered} / ${words.length}`;
                 overlayPercentStat.innerText = `Percentage: ${score.percentage.toFixed(2)}%`;
                 overlayPlayButton.innerText = "Start Again";
                 overlay.style.display = "flex";
+
+                if (scores.length == 9) {
+                    if (score.wordsEntered < scores[scores.length - 1].wordsEntered) {
+                        return;
+                    }
+                    scores.pop();
+                }
+
+                scores.push(score);
+                populateScores();
+
+                localStorage.setItem("scores", JSON.stringify(scores));
+                scoreAside.style.display = "block";
             }, 2000);
         }
     }, 200);
 }
+
+window.addEventListener("load", function() {
+    if (localStorage.length > 0) {
+        scores = JSON.parse(localStorage.getItem("scores"));
+        populateScores();
+
+        scoreAside.style.display = "block";
+    }
+});
 
 wordInput.addEventListener("keyup", processInput);
 overlayPlayButton.addEventListener("click", startGame);
